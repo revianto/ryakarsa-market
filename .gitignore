@@ -1,0 +1,7 @@
+# Data pribadi user (template post tersimpan), bukan bagian dari definisi skill
+skills/*/library/
+.codex/skills/*/library/
+
+# Sisa menjalankan test
+__pycache__/
+*.pyc
