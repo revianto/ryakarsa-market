@@ -1,6 +1,6 @@
 ---
 name: social-design
-description: Design system khusus post sosial media dengan engine render lokal per brand — naskah (deck JSON) + pola layout reusable + token brand dari design-tokens, dirender jadi PNG di dimensi pixel persis tiap platform (carousel & feed Instagram, Story/Reels cover, thumbnail YouTube & Shorts, cover TikTok, gambar X/Threads, status WhatsApp). Tiap brand punya folder di studio (git privat) sehingga warna, font, koordinat elemen, pola, dan riwayat konten tersimpan lintas sesi — tidak mulai dari nol. Dua mode — "ide saja" (konsep layout, teks per slide) atau "generate langsung" (render PNG siap upload). Validator otomatis menolak deck yang melanggar batas kata, jumlah slide, atau kontras sebelum render. Gunakan saat user minta "desain post IG", "bikin carousel", "template feed", "thumbnail YouTube", "cover Reels/TikTok", "gambar untuk post ini", "design system sosmed", "bikin visualnya sekalian", "generate post-nya", "render deck", "tambah brand baru untuk konten". Bukan untuk menulis caption/script (content-post), bukan untuk identitas visual brand dari nol (design-brief/design-tokens di pack ryakarsa), dan bukan untuk desain halaman web.
+description: Design system khusus post sosial media dengan engine render lokal per brand — naskah (deck JSON) + pola layout reusable + token brand dari design-tokens, dirender jadi PNG di dimensi pixel persis tiap platform (carousel & feed Instagram, Story/Reels cover, thumbnail YouTube & Shorts, cover TikTok, gambar X/Threads, status WhatsApp). Tiap brand punya folder di studio (git privat) sehingga warna, font, koordinat elemen, pola, dan riwayat konten tersimpan lintas sesi — tidak mulai dari nol. Bisa mengikuti referensi visual yang dikirim user (screenshot/mockup/link) — struktur & layout referensi dinilai dan direplikasi sebagai pola baru, tapi warna/font tetap dari token brand sendiri, bukan ditiru dari referensi. Dua mode — "ide saja" (konsep layout, teks per slide) atau "generate langsung" (render PNG siap upload). Validator otomatis menolak deck yang melanggar batas kata, jumlah slide, atau kontras sebelum render. Gunakan saat user minta "desain post IG", "bikin carousel", "template feed", "thumbnail YouTube", "cover Reels/TikTok", "gambar untuk post ini", "design system sosmed", "bikin visualnya sekalian", "generate post-nya", "render deck", "tambah brand baru untuk konten", "bikin kayak referensi/contoh ini". Bukan untuk menulis caption/script (content-post), bukan untuk identitas visual brand dari nol (design-brief/design-tokens di pack ryakarsa), dan bukan untuk desain halaman web.
 ---
 
 # Social Design
@@ -41,6 +41,18 @@ Kenapa dipisah: kode engine generik untuk semua brand dan boleh publik; data bra
 2. **`social brands`** — brand-nya sudah ada di studio? Pakai. Lihat deck lamanya (`social decks <brand>`) untuk menjaga gaya konten konsisten.
 3. **Feed yang sudah jalan** (produk existing) — minta screenshot beberapa post terakhir. Kalau gayanya sudah mapan, ikuti (atur lewat `brand.css`/pola brand), jangan diganti gaya baru hanya karena bisa.
 4. **Teks** — dari `content-post` kalau ada. Kalau belum dan post-nya butuh banyak teks, sarankan tulis dulu di sana; desain yang menunggu copy lebih cepat daripada copy yang dipaksa masuk desain.
+
+## Step 1b — Referensi visual dari user
+
+Kalau user mengirim referensi (screenshot carousel kompetitor, mockup, link post orang lain, "kayak gini tapi buat produk kita") — **jangan diabaikan, tapi juga jangan ditiru mentah-mentah.** Sama seperti `design-brief`, referensi dinilai, bukan diterima atau dibuang begitu saja.
+
+1. **Amati strukturnya, bukan gayanya**: urutan elemen, hierarki (mana yang besar/kecil, mana yang duluan dibaca), pola tata letak (teks rata kiri vs tengah, foto di mana, ada elemen menyambung antar slide atau tidak), jumlah slide dan ritmenya. **Warna dan font referensi TIDAK dipakai** — itu tugas token brand (Step 3), bukan referensi orang lain; brand yang konsisten tidak boleh berubah warna cuma karena mencontoh satu post.
+2. **Cek dulu apakah pola bawaan sudah cukup mirip** (`social patterns <brand>`). Kalau strukturnya sama dengan salah satu pola yang ada (mis. referensinya "judul besar + paragraf" = `title-body`), pakai itu — jangan bikin pola baru untuk sesuatu yang sudah ada.
+3. **Kalau strukturnya genuinely baru**, buat pola baru khusus brand ini (`<brand>/patterns/<nama>.js`, salin `_template.js`) yang mereplikasi *tata letak* referensi — posisi elemen, proporsi, hierarki — tapi tetap pakai kelas `base.css` dan variabel `--c-*`/`--ss-*` supaya otomatis ikut token brand. Beri vonis eksplisit ke user, seperti di `design-brief`:
+   - **Cocok penuh** — struktur diambil apa adanya.
+   - **Cocok sebagian** (paling sering) — sebutkan bagian mana yang diambil dan bagian mana yang sengaja tidak (mis. "layout 2 kolomnya dipakai, tapi elemen badge diskon merahnya tidak — brand ini tidak memakai warna alert untuk promo").
+   - **Tidak cocok** — jelaskan kenapa (mis. referensi itu untuk format Reels 9:16, sedangkan yang diminta carousel 4:5), tawarkan pola terdekat yang ada.
+4. Render satu slide contoh dengan pola baru itu dan tunjukkan ke user sebelum dipakai untuk deck penuh — pola hasil interpretasi referensi lebih sering butuh satu ronde penyesuaian dibanding pola bawaan.
 
 ## Step 2 — Tentukan mode
 
@@ -127,9 +139,10 @@ Dimensi & aturan platform sumbernya satu: `../content-post/references/platform-r
 
 ## Menambah pola
 
+- **Dari referensi visual user** → lihat Step 1b. Ini jalur paling sering untuk pola baru — user jarang minta pola abstrak, biasanya mengirim contoh.
 - **Khusus satu brand** → `<brand>/patterns/<nama>.js` (salin `engine/patterns/_template.js`). Bernama sama dengan pola engine = menimpanya untuk brand itu saja.
 - **Berguna untuk semua brand** → `engine/patterns/`, lalu sync repo `ryakarsa-market`.
-- Aturan pola: pakai kelas di `engine/base.css` dan variabel warna `--c-*` — **jangan hard-code warna**, supaya token brand apapun berlaku. Deklarasikan `required` (dicek validator), `span: 2` untuk pola menyambung, `cta: true` untuk pola ajakan.
+- Aturan pola: pakai kelas di `engine/base.css` dan variabel warna `--c-*` — **jangan hard-code warna**, supaya token brand apapun berlaku (kecuali kasus seperti scrim foto di pola `photo`, yang didokumentasikan eksplisit alasannya). Deklarasikan `required` (dicek validator), `span: 2` untuk pola menyambung, `cta: true` untuk pola ajakan.
 - Jangan pernah menulis HTML satu-off untuk satu carousel tertentu — kalau terasa perlu, itu tanda ada pola yang belum ada.
 
 ## Teknik di luar engine
