@@ -145,9 +145,30 @@ Dimensi & aturan platform sumbernya satu: `../content-post/references/platform-r
 - Aturan pola: pakai kelas di `engine/base.css` dan variabel warna `--c-*` — **jangan hard-code warna**, supaya token brand apapun berlaku (kecuali kasus seperti scrim foto di pola `photo`, yang didokumentasikan eksplisit alasannya). Deklarasikan `required` (dicek validator), `span: 2` untuk pola menyambung, `cta: true` untuk pola ajakan.
 - Jangan pernah menulis HTML satu-off untuk satu carousel tertentu — kalau terasa perlu, itu tanda ada pola yang belum ada.
 
-## Teknik di luar engine
+## Mosaic grid profil
 
-**Mosaic grid profil** (satu gambar besar dipecah 3×2 / 1×3 post): belum didukung engine. Ikuti aturan di `platform-rules.md` bagian Instagram (kanvas master, bleed slicing 1160px, urutan upload mundur dari kanan bawah) — kesalahan urutan upload tidak bisa diperbaiki tanpa menghapus post.
+Format `ig-mosaic-3x3` (9 post) dan `ig-mosaic-pinned-1x3` (3 post) didukung engine. Naskah deck-nya beda bentuk dari deck biasa: bukan `slides`, tapi `cells` (array 9 atau 3, urutan reading — kiri-atas ke kanan-bawah), tiap cell tetap pakai pola yang sudah ada (`cover`, `photo`, `product-card`, dst). Cell **tidak boleh** pakai pola `span > 1` (`bridge`, `word-split`) — satu cell harus satu gambar utuh.
+
+```json
+{
+  "format": "ig-mosaic-pinned-1x3",
+  "cells": [
+    { "pattern": "cover", "title": "..." },
+    { "pattern": "product-card", "title": "...", "image": "..." },
+    { "pattern": "stat", "value": "...", "label": "..." }
+  ]
+}
+```
+
+`social render <brand> <deck>` mendeteksi format mosaic otomatis dan menghasilkan, per cell: `cell-r{row}c{col}.png` (ukuran pas, 1080×1350) dan `cell-r{row}c{col}-bleed.png` (1160×1350, lebih lebar 80px — **pakai file bleed ini untuk upload**, biar elemen yang dekat tepi cell tidak terpotong celah grid Instagram).
+
+Cell mosaic dirender **tanpa** chrome (tanpa wordmark/handle/swipe) — beda dari carousel, karena grid adalah satu permukaan yang dilihat sebagai kumpulan post di bawah satu header profil, bukan swipe di dalam satu post.
+
+**Urutan upload wajib mundur** (kanan-bawah → kiri-atas), karena Instagram selalu menyisipkan post baru di kiri-atas. `social render` mencetak urutan ini di akhir — ikuti persis, kesalahan urutan tidak bisa diperbaiki tanpa hapus & upload ulang semua post.
+
+Belum didukung di v1 (styling tambahan, bukan mekanisme grid): bentuk organik/blob latar dan crop foto lingkaran — kalau brand butuh ini, taruh di `<brand>/patterns/` atau `<brand>/brand.css` setelah cell dasarnya jalan.
+
+## Teknik di luar engine
 
 **Render satu file HTML lepas / tanpa Node** (mis. skill dipakai di lingkungan tanpa Node): `scripts/render_post.py` — Python + Chrome CLI, tanpa install apapun.
 

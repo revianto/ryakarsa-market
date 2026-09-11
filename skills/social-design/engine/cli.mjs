@@ -15,13 +15,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { FORMATS } from './lib/formats.mjs';
+import { MOSAIC_FORMATS } from './lib/mosaic.mjs';
 import { allPatternFiles, loadPatternMeta } from './lib/patterns.mjs';
-import { renderDeck } from './lib/render.mjs';
+import { renderDeck, renderMosaicDeck } from './lib/render.mjs';
 import {
   ENGINE_DIR, brandDir, designTokensLibrary, listBrands, listDecks, loadBrand, loadJson, resolveDeck, studioRoot,
 } from './lib/studio.mjs';
 import { buildTokensCss, checkContrast, guessRoles, primaryFamily } from './lib/tokens.mjs';
-import { validateDeck } from './lib/validate.mjs';
+import { isMosaicFormat, validateDeck, validateMosaicDeck } from './lib/validate.mjs';
 
 function parseArgs(argv) {
   const positional = [];
@@ -75,8 +76,10 @@ function validateBrandDeck(studio, brandName, deckArg) {
   const deckFile = resolveDeck(dir, deckArg);
   const deck = loadJson(deckFile, `deck "${deckArg}"`);
   const { files, meta } = patternsFor(studio, brandName);
-  const result = validateDeck(deck, meta, config, (rel) => fs.existsSync(path.join(dir, rel)));
-  return { dir, config, deck, deckFile, files, meta, ...result };
+  const mosaic = isMosaicFormat(deck.format);
+  const validate = mosaic ? validateMosaicDeck : validateDeck;
+  const result = validate(deck, meta, config, (rel) => fs.existsSync(path.join(dir, rel)));
+  return { dir, config, deck, deckFile, files, meta, mosaic, ...result };
 }
 
 function printIssues(label, { errors, warnings }) {
@@ -160,7 +163,8 @@ const commands = {
     const r = validateBrandDeck(studio, brand, deck);
     printIssues(deck, r);
     if (r.errors.length) return 1;
-    console.log(`OK   ${deck}: ${r.deck.slides.length} slide(s), format ${r.deck.format}`);
+    const count = r.mosaic ? r.deck.cells.length : r.deck.slides.length;
+    console.log(`OK   ${deck}: ${count} ${r.mosaic ? 'cell' : 'slide'}(s), format ${r.deck.format}`);
     return 0;
   },
 
@@ -177,11 +181,12 @@ const commands = {
       printIssues(d, r);
       if (r.errors.length) { failed += 1; continue; }
       const outDir = path.join(dir, 'output', path.basename(r.deckFile, '.json'));
-      const res = await renderDeck({
+      const renderFn = r.mosaic ? renderMosaicDeck : renderDeck;
+      const res = await renderFn({
         brandPath: dir, brand: r.config, deck: r.deck, patternFiles: r.files, patternMeta: r.meta,
         outDir, scale, log: (m) => console.log(m),
       });
-      console.log(`DONE ${d}: ${res.files.length} PNG at ${res.scale}x (${res.format.width * res.scale}x${res.format.height * res.scale}) -> ${outDir}`);
+      console.log(`DONE ${d}: ${res.files.length} PNG at ${res.scale}x -> ${outDir}`);
     }
     return failed ? 1 : 0;
   },
@@ -192,6 +197,7 @@ async function main() {
   if (!cmd || !commands[cmd]) {
     console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').slice(1, 14).map((l) => l.replace(/^\/\/ ?/, '')).join('\n'));
     console.log(`Formats: ${Object.keys(FORMATS).join(', ')}`);
+    console.log(`Mosaic formats (deck uses "cells" instead of "slides"): ${Object.keys(MOSAIC_FORMATS).join(', ')}`);
     return cmd ? 1 : 0;
   }
   return commands[cmd](parseArgs(rest), cmd, studioRoot());

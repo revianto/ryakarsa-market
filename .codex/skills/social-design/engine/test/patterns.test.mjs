@@ -52,6 +52,18 @@ test('photo pattern requires only an image (title/body optional for a pure photo
   assert.equal(meta.photo.span, 1);
 });
 
+test('product-card requires only a title (photo/label/meta are optional)', () => {
+  const meta = loadPatternMeta(patternFiles(PATTERNS_DIR));
+  assert.deepEqual(Array.from(meta['product-card'].required), ['title']);
+  assert.equal(meta['product-card'].span, 1);
+});
+
+test('word-split spans 3 output images (matches its reference: a word split across 3 cells)', () => {
+  const meta = loadPatternMeta(patternFiles(PATTERNS_DIR));
+  assert.deepEqual(Array.from(meta['word-split'].required), ['letters']);
+  assert.equal(meta['word-split'].span, 3);
+});
+
 test('the bridge crossing panel carries no text at the seam (per the design rule)', () => {
   const src = fs.readFileSync(path.join(PATTERNS_DIR, 'bridge.js'), 'utf8');
   const panelDiv = src.match(/<div style="position:absolute;left:\$\{panelLeft\}[\s\S]*?<\/div>/)[0];

@@ -85,5 +85,26 @@
       p.render(slide, ctx) + chromeSegments + `</section>`;
   }
 
-  window.UC = { register, renderSlide, esc, image, PATTERNS };
+  // Renders a mosaic deck: cells laid out in a grid, absolutely positioned inside
+  // one master canvas, so Node can slice arbitrary (including bleed) rectangles
+  // out of a single screenshot. No chromeHead/chromeFoot per cell — see the
+  // comment on renderMosaicDeck in lib/render.mjs for why.
+  function renderMosaic(cells, ctx) {
+    const stage = document.getElementById('stage');
+    const m = ctx.mosaic;
+    const cellCtx = { ...ctx, format: m.cellFormat };
+    const tiles = cells.map((cell, i) => {
+      const row = Math.floor(i / m.cols);
+      const col = i % m.cols;
+      const p = PATTERNS[cell.pattern];
+      if (!p) throw new Error(`Unknown pattern "${cell.pattern}"`);
+      const alt = cell.bg === 'alt' ? ' ss-alt' : '';
+      return `<div style="position:absolute;left:${col * m.cellWidth}px;top:${row * m.cellHeight}px;width:${m.cellWidth}px;height:${m.cellHeight}px">` +
+        `<section class="ss-canvas${alt}" style="${canvasVars(cellCtx, 1)}"><div class="ss-body">${p.render(cell, cellCtx)}</div></section>` +
+        `</div>`;
+    }).join('');
+    stage.innerHTML = `<div style="position:relative;width:${m.width}px;height:${m.height}px">${tiles}</div>`;
+  }
+
+  window.UC = { register, renderSlide, renderMosaic, esc, image, PATTERNS };
 })();

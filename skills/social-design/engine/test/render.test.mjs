@@ -190,6 +190,14 @@ test('a full-bleed pattern (inset:0 absolute layers) never buries the wordmark',
   }
 });
 
+test('word-split (span 3) renders three correctly sized, numbered PNGs', { skip }, async () => {
+  const dir = tempBrand();
+  const res = await render(dir, [{ pattern: 'word-split', letters: ['N', 'E', 'W'] }]);
+  assert.equal(res.files.length, 3);
+  for (const f of res.files) assert.deepEqual(png(f), { w: 1080, h: 1350 });
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
 test('a missing tokens.css fails before launching the browser', async () => {
   const { renderDeck } = await import('../lib/render.mjs');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ss-render-'));

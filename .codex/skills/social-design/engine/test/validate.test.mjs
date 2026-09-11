@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
-import { countWords, slideText, validateDeck } from '../lib/validate.mjs';
+import { countWords, isMosaicFormat, slideText, validateDeck, validateMosaicDeck } from '../lib/validate.mjs';
 
 const PATTERNS = {
   cover: { required: ['title'] },
@@ -110,4 +110,43 @@ test('a photo slide with chromeOn set has no such warning', () => {
 test('a deck with no slides array fails clearly instead of crashing', () => {
   const { errors } = validateDeck({ format: 'ig-carousel' }, PATTERNS);
   assert.match(errors[0], /no "slides" array/);
+});
+
+// ---------- mosaic decks ----------
+
+test('isMosaicFormat distinguishes grid formats from normal post formats', () => {
+  assert.equal(isMosaicFormat('ig-mosaic-3x3'), true);
+  assert.equal(isMosaicFormat('ig-carousel'), false);
+});
+
+test('a mosaic deck needs exactly the cell count its grid format requires', () => {
+  const deck = { format: 'ig-mosaic-3x3', cells: [{ pattern: 'cover', title: 'x' }] };
+  const { errors } = validateMosaicDeck(deck, PATTERNS);
+  assert.match(errors[0], /ig-mosaic-3x3 needs exactly 9 cells \(3x3\), deck has 1/);
+});
+
+test('a pinned row deck with exactly 3 cells passes the count check', () => {
+  const deck = { format: 'ig-mosaic-pinned-1x3', cells: Array.from({ length: 3 }, () => ({ pattern: 'cover', title: 'x' })) };
+  const { errors } = validateMosaicDeck(deck, PATTERNS);
+  assert.ok(!errors.some((e) => /needs exactly/.test(e)));
+});
+
+test('a span>1 pattern in a mosaic cell is rejected — cells must stand alone', () => {
+  const deck = { format: 'ig-mosaic-pinned-1x3', cells: [
+    { pattern: 'bridge', title: 'a' }, { pattern: 'cover', title: 'b' }, { pattern: 'cover', title: 'c' },
+  ] };
+  const { errors } = validateMosaicDeck(deck, PATTERNS);
+  assert.match(errors.join(' '), /cell 1.*bridge.*spans 2.*must be span-1/);
+});
+
+test('an unknown mosaic format is reported, not thrown', () => {
+  const deck = { format: 'ig-mosaic-nope', cells: [{ pattern: 'cover', title: 'x' }] };
+  const { errors } = validateMosaicDeck(deck, PATTERNS);
+  assert.match(errors.join(' '), /Unknown mosaic format/);
+});
+
+test('a mosaic deck has no "no CTA" or "connected pairs" warnings — those are carousel-only concerns', () => {
+  const deck = { format: 'ig-mosaic-pinned-1x3', cells: Array.from({ length: 3 }, () => ({ pattern: 'cover', title: 'x' })) };
+  const { warnings } = validateMosaicDeck(deck, PATTERNS);
+  assert.equal(warnings.length, 0);
 });
