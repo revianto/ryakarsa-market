@@ -5,3 +5,6 @@ skills/*/library/
 # Sisa menjalankan test
 __pycache__/
 *.pyc
+
+# Dependency engine — dipasang lewat npm install, package-lock.json yang ikut repo
+node_modules/

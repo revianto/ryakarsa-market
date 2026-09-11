@@ -1,0 +1,130 @@
+/* Structural CSS shared by every brand. Colors & fonts come ONLY from the
+   brand's tokens.css (--ss-* roles). Sizes scale with --u = canvas width / 1080,
+   so the proven 1080px carousel type scale carries over to other formats.
+
+   Per-brand tweaks go in brands/<brand>/brand.css — never edit this file for
+   one brand. */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: transparent; }
+#stage { display: flex; }
+
+.ss-canvas {
+  /* current-ground palette: patterns use --c-*, so they work on bg and alt */
+  --c-bg: var(--ss-bg);
+  --c-text: var(--ss-text);
+  --c-muted: var(--ss-text-muted);
+  --c-heading: var(--ss-heading);
+  --c-accent: var(--ss-accent);
+  --c-accent-text: var(--ss-accent-text);
+  --c-hair: color-mix(in srgb, var(--ss-heading) 16%, transparent);
+
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  overflow: hidden;
+  flex: none;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--ss-font-body);
+  font-weight: var(--body-weight, 400);
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-top) var(--m) var(--pad-bottom);
+  -webkit-font-smoothing: antialiased;
+}
+.ss-canvas.ss-alt {
+  --c-bg: var(--ss-bg-alt);
+  --c-text: var(--ss-on-alt);
+  --c-muted: var(--ss-on-alt-muted);
+  --c-heading: var(--ss-on-alt);
+  --c-accent: var(--ss-accent-on-alt);
+  --c-accent-text: var(--ss-accent-on-alt);
+  --c-hair: color-mix(in srgb, var(--ss-accent-on-alt) 28%, transparent);
+}
+
+/* ---------- chrome: identical coordinates on every slide ---------- */
+.ss-head {
+  flex: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: calc(56 * var(--u));
+}
+.ss-wordmark {
+  font-family: var(--ss-font-display);
+  font-weight: var(--display-weight, 700);
+  font-size: calc(27 * var(--u));
+  color: var(--c-heading);
+}
+.ss-handle, .ss-label {
+  font-weight: 600;
+  font-size: calc(21 * var(--u));
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+.ss-foot {
+  position: absolute;
+  left: var(--m);
+  right: var(--m);
+  bottom: var(--foot-bottom);
+  height: calc(40 * var(--u));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ss-swipe { display: flex; align-items: center; gap: calc(30 * var(--u)); color: var(--c-heading); }
+.ss-swipe::before { content: ""; width: calc(76 * var(--u)); height: calc(3 * var(--u)); background: var(--c-accent); }
+.ss-link {
+  font-weight: 600;
+  font-size: calc(21 * var(--u));
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-accent-text);
+  border-bottom: calc(2 * var(--u)) solid var(--c-accent);
+  padding-bottom: calc(6 * var(--u));
+}
+
+/* ---------- content area: stops above the platform's bottom safe zone ---------- */
+.ss-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--body-clear);
+}
+
+/* ---------- type scale (1080-wide carousel values, scaled by --u) ---------- */
+.ss-cover   { font-family: var(--ss-font-display); font-weight: var(--display-weight, 700); font-size: calc(82 * var(--u)); line-height: 1.04; color: var(--c-heading); text-wrap: balance; }
+.ss-title   { font-family: var(--ss-font-display); font-weight: var(--display-weight, 700); font-size: calc(58 * var(--u)); line-height: 1.06; color: var(--c-heading); text-wrap: balance; }
+.ss-ftitle  { font-family: var(--ss-font-display); font-weight: var(--display-weight, 700); font-size: calc(41 * var(--u)); line-height: 1.12; color: var(--c-heading); }
+.ss-italic  { font-family: var(--ss-font-display); font-style: italic; font-weight: 400; font-size: calc(53 * var(--u)); line-height: 1.22; color: var(--c-heading); }
+.ss-text    { font-size: calc(30 * var(--u)); line-height: 1.6; color: var(--c-text); max-width: 34ch; }
+.ss-caption { font-size: calc(26 * var(--u)); line-height: 1.55; color: var(--c-muted); }
+.ss-num     { font-family: var(--ss-font-display); font-style: italic; font-weight: 400; color: var(--c-accent-text); line-height: 1; }
+
+.ss-hair { height: calc(2 * var(--u)); background: var(--c-hair); border: 0; width: 100%; }
+.ss-hair-short { height: calc(2 * var(--u)); width: calc(120 * var(--u)); background: var(--c-accent); }
+
+.ss-cta {
+  display: inline-block;
+  background: var(--ss-cta-bg);
+  color: var(--ss-cta-text);
+  font-weight: 600;
+  font-size: calc(24 * var(--u));
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: calc(32 * var(--u)) calc(56 * var(--u));
+}
+
+.ss-frame { width: 100%; overflow: hidden; background: color-mix(in srgb, var(--c-heading) 8%, transparent); }
+.ss-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ss-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  border: calc(3 * var(--u)) dashed var(--c-muted);
+  color: var(--c-muted);
+  font-size: calc(26 * var(--u));
+  padding: calc(40 * var(--u));
+}

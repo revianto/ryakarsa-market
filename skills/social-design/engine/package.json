@@ -1,0 +1,16 @@
+{
+  "name": "social-design-engine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic social-post render engine: deck JSON + pattern registry + brand tokens -> PNG",
+  "bin": {
+    "social": "./cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test 'test/*.test.mjs'"
+  },
+  "dependencies": {
+    "playwright-core": "^1.55.0"
+  }
+}

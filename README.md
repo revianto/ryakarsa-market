@@ -8,7 +8,7 @@ Plugin skill marketing & branding untuk ZCode, Claude Code, **dan** Codex CLI �
 | [`campaign-plan`](#2-campaign-plan--rencana-kampanye-yang-realistis) | tujuan → kanal, funnel, pilar konten, kalender sesuai kapasitas nyata |
 | [`content-post`](#3-content-post--konten-siap-posting) | ide → post siap tayang per platform, patuh batas tiap platform |
 | [`landing-copy`](#4-landing-copy--copy-halaman-marketing) | tulis atau audit copy landing page |
-| [`social-design`](#5-social-design--design-system-post-sosmed) | template visual post di dimensi persis, bisa langsung dirender jadi PNG |
+| [`social-design`](#5-social-design--design-system-post-sosmed) | engine render lokal per brand: naskah + pola + token brand → PNG di dimensi persis |
 
 **Tidak harus lewat `ryakarsa`.** Semua skill bisa jalan dari produk yang sudah jadi — URL yang tayang, codebase, akun sosmed yang aktif, atau materi brand yang kamu punya. Dokumen `ryakarsa` (PRD, design brief, design system) cuma bonus kalau kebetulan ada.
 
@@ -29,10 +29,12 @@ ryakarsa-market/
     ├── landing-copy/SKILL.md
     └── social-design/
         ├── SKILL.md
-        └── scripts/
-            ├── render_post.py            # HTML → PNG di dimensi persis (Chrome headless)
-            ├── manage_library.py         # kelola library template post
-            └── test_*.py                 # unit test
+        ├── engine/                       # engine render lokal (Node + playwright-core, pakai Chrome terpasang)
+        │   ├── cli.mjs                   # social brands|init-brand|tokens|patterns|validate|render
+        │   ├── lib/                      # validator, token & kontras, renderer, format platform
+        │   ├── patterns/                 # 8 pola bawaan (cover, title-body, numbered, bridge, ...)
+        │   └── test/                     # 45 test, termasuk render Chrome sungguhan
+        └── scripts/render_post.py        # cadangan tanpa-install untuk satu file HTML lepas
 ```
 
 ## Pasang di ZCode
@@ -64,8 +66,8 @@ cp -R skills/brand-kit skills/campaign-plan skills/content-post skills/landing-c
 
 ## Kebutuhan
 
-- `social-design` mode **generate langsung** butuh **Google Chrome atau Chromium** (untuk render PNG). Tanpa Chrome, mode **ide saja** tetap jalan.
-- Python 3 (sudah ada di macOS/Linux) untuk script `social-design`. Tidak ada dependency tambahan.
+- `social-design` mode **generate langsung** butuh **Google Chrome** dan **Node.js**, lalu sekali: `cd skills/social-design/engine && npm install` (hanya `playwright-core` ~13 MB — memakai Chrome yang sudah terpasang, tidak mengunduh browser). Tanpa itu, mode **ide saja** tetap jalan, dan `scripts/render_post.py` (Python 3, tanpa install) tersedia untuk render satu file HTML lepas.
+- Data brand (`brand.json`, naskah, pola khusus) disimpan di folder **studio** terpisah — default `~/Documents/social-studio`, atau atur `SOCIAL_STUDIO`. Jadikan repo git privat supaya ter-backup.
 
 ---
 
@@ -109,7 +111,15 @@ Mode **audit** untuk halaman yang sudah tayang (sebelum → sesudah per section,
 generate carousel 5 slide dari teks ini, pakai design system rebrew
 ```
 
-Warna & font diambil dari design system brand, dimensi persis per platform, safe zone & crop grid Instagram diperhitungkan. Mode **generate langsung** menghasilkan file PNG siap upload; mode **ide saja** menghasilkan konsep. Template yang bagus disimpan ke library untuk dipakai ulang.
+Tiap brand punya folder di studio: warna & font digenerate dari design system-nya (`design-tokens`), dengan **pengecekan kontras otomatis**. Konten ditulis sebagai naskah JSON memakai pola layout yang dipakai ulang, lalu dirender:
+
+```bash
+node skills/social-design/engine/cli.mjs init-brand rebrew --design-system rebrew
+node skills/social-design/engine/cli.mjs patterns rebrew           # pola + field wajib
+node skills/social-design/engine/cli.mjs render rebrew seduh-v60   # validasi, lalu PNG 2160×2700
+```
+
+Validator menolak naskah yang melebihi batas kata/slide/jumlah slide sebelum render, dan render gagal keras (bukan diam-diam memakai font lain) kalau font brand tidak termuat. Sesi berikutnya tidak mulai dari nol — brand, pola, dan riwayat naskahnya sudah tersimpan.
 
 ## Maintenance
 
