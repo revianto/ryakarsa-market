@@ -21,6 +21,7 @@ Produk tidak harus dibuat lewat `ryakarsa`. Cari yang tersedia, dari mana saja:
 |---|---|---|
 | **Produk yang sudah jalan** | URL live (landing, about, pricing), codebase lokal (README, copy di komponen halaman), akun sosmed yang aktif | Copy yang **benar-benar tayang**: tagline, headline, cara menyebut fitur, harga, nada bicara |
 | **Materi dari user** | Logo, brand guideline, deck, screenshot, contoh post lama, pesan WA ke pelanggan | Aturan resmi yang sudah diputuskan, pola yang sudah terbukti jalan |
+| **Folder marketing / wiki bisnis** | Folder terpisah dari repo kode (mis. di Documents), vault Obsidian/Notion berisi positioning, kompetitor, riset, design system khusus sosmed | Keputusan brand & positioning yang sering **tidak pernah masuk repo kode** — tanyakan apakah ada, karena tempat ini jarang ketemu lewat scan working directory |
 | **Dokumen `ryakarsa`** *(opsional, bonus)* | `PRD.md` section Positioning & Brand Tone, `DESIGN-BRIEF.md` | Positioning & tone yang sudah diputuskan saat perencanaan |
 | **Wawancara** | — | Hanya untuk yang masih kosong setelah semua sumber di atas |
 
@@ -80,6 +81,12 @@ Tulis ke `./BRAND-KIT.md` (atau path yang user sebut). Kalau file sudah ada, bac
 
 ## 5. Glosarium
 <!-- Kata/istilah yang dipakai vs dihindari. Mis. "tamu" bukan "guest", "undangan" bukan "invitation", "paket" bukan "plan". Juga sapaan: kamu/Anda/kak? -->
+<!-- Termasuk aturan tanda baca/tipografi naskah kalau brand punya (mis. tidak memakai tanda pisah panjang atau titik tengah). -->
+
+### Cara menyampaikan promo
+<!-- Bagaimana brand ini bicara saat ada diskon/promo tanpa merusak persepsinya. Promo berlebihan bisa "mendiskon" brand, bukan cuma harga — paling berisiko untuk brand premium/eksklusif. -->
+<!-- Contoh aturan untuk brand premium: "tenang, bukan berteriak" — tanpa stempel diskon merah, countdown mendesak, atau badge SALE; promo disampaikan sebagai undangan/kesempatan, bukan obral. Brand mass-market boleh lebih lugas. -->
+<!-- Mode extract: lihat bagaimana promo yang sudah pernah tayang disampaikan. Kalau belum pernah ada promo, tulis (perlu konfirmasi). -->
 
 ## 6. Key Messaging
 <!-- 1 pesan utama (satu kalimat, diulang di mana-mana) + 3 pesan pendukung. -->

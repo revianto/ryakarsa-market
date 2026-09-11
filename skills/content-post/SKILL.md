@@ -39,7 +39,21 @@ Baca `references/platform-rules.md`. Cek tanggal "Terakhir diverifikasi" di atas
 Lalu per format:
 
 - **Caption feed/carousel** — hook → isi → CTA → hashtag (IG: ~5 yang relevan, bukan 30).
-- **Carousel** — teks per slide: slide 1 = hook (wajib di area tengah karena grid 3:4), slide tengah = isi (satu ide per slide), slide terakhir = CTA. Tulis juga caption per slide kalau relevan.
+- **Carousel** — teks per slide, maks ~45 kata per slide, satu ide per slide. Desain hanya menahan orang di slide pertama; yang membuat mereka menggeser sampai habis adalah **urutannya**. Susun dengan ketukan narasi ini:
+
+  | # | Ketukan | Tugasnya |
+  |---|---|---|
+  | 1 | **Kail** | Sebut gejala/masalah yang dirasakan audiens — bukan fitur yang dijual. Wajib di area tengah (crop grid 3:4) |
+  | 2 | Bukti masalah | Tunjukkan bentuk konkret masalahnya (contoh nyata, bukan klaim umum) |
+  | 3 | Cerita | Satu kejadian nyata — lebih meyakinkan daripada statistik. **Hanya kalau ceritanya benar ada**; jangan dikarang |
+  | 4 | Cara kerja | Langkah singkat (2-4). Slide jenis ini yang paling sering disimpan |
+  | 5 | **Bukti pilar** | Tunjukkan (bukan klaim) keunggulan utama produk — dari key messaging brand kit |
+  | 6 | Jaminan | Jawab keberatan terbesar, tutup lingkaran ke masalah di ketukan 2 |
+  | 7 | **Ajakan** | Satu aksi. Pakai kalimat yang sama dengan tombol di website/landing supaya konsisten |
+
+  Carousel pendek (5-6 slide) boleh menggabung atau melewati ketukan 2, 3, 4, 6. Carousel panjang boleh memecah ketukan 4 dan 5. Yang **tidak pernah dilewati**: **1 (kail), 5 (bukti pilar), 7 (ajakan)**. Kalau produk punya dua pilar utama, ketukan 2-3 membangun pilar pertama dan 5 membuktikan pilar kedua.
+
+  Tulis juga caption per slide kalau relevan. Kalau dua slide dirancang menyambung (lihat `social-design`), **tiap potongan kalimat wajib tetap masuk akal berdiri sendiri** — orang yang berhenti di slide pertama tidak boleh membaca kalimat rusak.
 - **Video (TikTok/Reels/Shorts)** — script dengan penanda waktu: `[0-3 dtk] hook`, `[3-X dtk] isi`, `[akhir] CTA`. Sertakan teks overlay terpisah dari narasi, dan ingat safe zone (teks jangan di ~20% bawah & ~10% kanan).
 - **Thread X** — tiap post wajib berdiri sendiri; jangan potong di tengah kalimat. Post pertama = hook, terakhir = CTA.
 - **Threads** — lebih santai & percakapan dari X. Hati-hati link: dihitung panjang penuh.

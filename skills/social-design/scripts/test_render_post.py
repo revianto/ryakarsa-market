@@ -81,6 +81,20 @@ class BuildCommandTest(unittest.TestCase):
         self.assertTrue(self.cmd[-1].startswith("file://"))
         self.assertTrue(self.cmd[-1].endswith("post.html"))
 
+    def test_scale_sets_device_scale_factor_but_keeps_css_window_size(self):
+        cmd = render_post.build_command("chrome", "post.html", "post.png", 1080, 1350, 8000, scale=2)
+        self.assertIn("--force-device-scale-factor=2", cmd)
+        self.assertIn("--window-size=1080,1350", cmd)
+        self.assertIn("--virtual-time-budget=8000", cmd)
+
+
+class ExpectedDimensionsTest(unittest.TestCase):
+    def test_one_x_is_css_size(self):
+        self.assertEqual(render_post.expected_dimensions(1080, 1350, 1), (1080, 1350))
+
+    def test_two_x_doubles_both_axes(self):
+        self.assertEqual(render_post.expected_dimensions(1080, 1350, 2), (2160, 2700))
+
 
 @unittest.skipUnless(render_post.find_chrome(), "Chrome/Chromium not installed")
 class RenderIntegrationTest(unittest.TestCase):
@@ -96,6 +110,18 @@ class RenderIntegrationTest(unittest.TestCase):
             dims = render_post.render(render_post.find_chrome(), html, png, 1080, 1350, 3000)
             self.assertEqual(dims, (1080, 1350))
             self.assertTrue(png.exists())
+
+    def test_renders_at_double_density_when_scaled(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            html = Path(tmp) / "post.html"
+            png = Path(tmp) / "post.png"
+            html.write_text(
+                "<!doctype html><html><head><style>html,body{margin:0;width:1080px;height:1350px;"
+                "overflow:hidden;background:#1a2b21}</style></head><body></body></html>",
+                encoding="utf-8",
+            )
+            dims = render_post.render(render_post.find_chrome(), html, png, 1080, 1350, 3000, scale=2)
+            self.assertEqual(dims, (2160, 2700))
 
 
 if __name__ == "__main__":

@@ -28,7 +28,28 @@ Tanyakan lewat **AskUserQuestion** (fallback daftar bernomor). Yang wajib jelas:
 4. **Budget iklan** — organik saja, atau ada budget berbayar? Kalau berbayar, berapa kisarannya.
 5. **Kanal yang sudah dimiliki** — akun mana yang sudah aktif & berapa pengikutnya (memulai dari akun kosong vs akun yang sudah punya audiens sangat berbeda).
 
+## Step 2b — Diagnosis jenis produk
+
+Sebelum memilih kanal, tentukan jenis produknya — ini yang menentukan apakah kampanye harus mengejar **awareness** (dilihat banyak orang) atau **trust** (diyakini). Kesalahan paling mahal adalah mengejar awareness untuk produk yang sebenarnya butuh trust.
+
+| Sumbu | Kutub A → strategi | Kutub B → strategi |
+|---|---|---|
+| **Keterlibatan** | Rendah (murah, risiko gagal kecil) → visibility & kemudahan akses | Tinggi (mahal/berisiko, dipertimbangkan matang) → trust, penjelasan, bukti, rekomendasi |
+| **Frekuensi beli** | Rutin/kebiasaan → kemudahan, jangan ganggu kebiasaan | Jarang/sekali seumur hidup → proses keputusan panjang, brand & bukti penting |
+| **Cara beli** | Impulsif → daya tarik & visibility di titik keputusan | Terencana → dibangun jauh hari (bukti, testimoni asli, sertifikasi) |
+| **Wujud nilai** | Mudah dirasakan (visual, bisa dicoba) → biarkan produk jadi bintang, dorong coba langsung | Sulit dinilai sebelum beli → bangun kredibilitas |
+
+Tulis hasil diagnosis ini di `CAMPAIGN.md` beserta alasannya, dan tandai sebagai **dugaan** kalau belum ada data pelanggan yang mendukungnya.
+
 ## Step 3 — Pilih kanal, dengan alasan
+
+**Petakan dulu ke tiga jenis media** — tiap jenis punya peran berbeda, dan rencana yang sehat biasanya tidak bertumpu pada satu jenis saja:
+
+- **Owned** (milik sendiri: website/landing, akun sosmed resmi, daftar kontak WA) — kredibilitas jangka panjang, biaya waktu.
+- **Earned** (didapat: rekomendasi, ulasan, repost, word-of-mouth) — kepercayaan tertinggi, biaya marginal hampir nol. **Tanyakan apakah produknya punya loop distribusi bawaan** — mis. produk yang otomatis dilihat orang lain saat dipakai (undangan yang dibuka ratusan tamu, dokumen yang dibagikan, link yang disebar). Kalau ada, itu sering jadi kanal akuisisi terbaik dan harus dimaksimalkan duluan (kualitas pengalaman orang yang menerimanya + tanda halus "dibuat dengan ...") sebelum membayar iklan.
+- **Paid** (iklan, endorsement) — kontrol tinggi, biaya langsung. Lihat pengaman di Step 3b.
+
+Lalu pilih kanal konkretnya:
 
 **Jangan pilih semua platform.** Untuk solo/tim kecil, rekomendasikan **1-2 kanal utama** + paling banyak 1 kanal pendukung. Nilai tiap kandidat dari:
 
@@ -38,6 +59,15 @@ Tanyakan lewat **AskUserQuestion** (fallback daftar bernomor). Yang wajib jelas:
 - **Data lama** (produk existing) — kanal yang sudah terbukti mendatangkan pelanggan diprioritaskan dari kanal yang cuma terasa menjanjikan.
 
 Tulis juga **kanal yang sengaja tidak dipakai beserta alasannya** — ini sama pentingnya, supaya keputusan itu tidak diperdebatkan ulang tiap minggu.
+
+**Waspadai bias pemilih kanal sendiri** — sebutkan ke user kalau terlihat: memilih kanal karena selera pribadi atau karena sedang ramai (bukan karena audiensnya di sana), dan memilih aktivitas supaya terlihat "bergerak" tanpa cara mengukur dampaknya.
+
+## Step 3b — Pengaman iklan berbayar (hanya kalau ada budget)
+
+- **Iklan cuma memperbesar yang sudah ada.** Kalau positioning belum jelas, target kabur, atau landing page belum meyakinkan, menaikkan budget tidak menaikkan penjualan — cuma memperbesar kebingungan dan membakar kas. Cek dulu: `BRAND-KIT.md` ada dan jelas? Halaman tujuan sudah layak? Kalau belum, sarankan perbaiki itu dulu (`brand-kit`, `landing-copy`) sebelum mengalokasikan budget.
+- **Hitung batas biaya per akuisisi (CPA) dari data user**, jangan dari benchmark karangan: `CPA maksimal = harga jual − biaya per penjualan` (margin kotor). CPA di atas angka itu = rugi di tiap penjualan. Minta angka harga & biaya ke user.
+- **Produk sekali beli** (nilai seumur pelanggan = satu transaksi, tidak ada langganan/pembelian ulang) punya toleransi CPA yang sangat sempit. Untuk jenis ini, iklan tertarget luas (demografi umum) hampir pasti boros; kalau tetap mau iklan, prioritaskan kanal **niat tinggi** — orang yang sedang aktif mencari (iklan pencarian dengan kata kunci spesifik), bukan orang yang kebetulan scroll.
+- **Promo & diskon bisa "mendiskon" brand**, bukan cuma harga — terutama untuk brand yang positioning-nya premium/eksklusif. Kalau `BRAND-KIT.md` punya aturan cara menyampaikan promo, ikuti; kalau tidak ada dan brand-nya premium, ingatkan risiko ini sebelum merencanakan diskon besar.
 
 ## Step 4 — Funnel & pilar konten
 
@@ -65,7 +95,7 @@ Per baris kalender: tanggal/minggu, kanal & format, pilar, tahap funnel, ide/jud
 
 Tulis ke `./CAMPAIGN.md` (atau path yang user sebut). Kalau sudah ada, backup dulu ke `CAMPAIGN_old.md`.
 
-Struktur: Tujuan & Metrik → Kapasitas (angka dari Step 2, supaya alasan frekuensi terlihat) → Kanal Dipakai & Tidak Dipakai (+ alasan) → Funnel → Pilar Konten → Kalender → Titik Evaluasi → Risiko & Pertanyaan Terbuka.
+Struktur: Tujuan & Metrik → Kapasitas (angka dari Step 2, supaya alasan frekuensi terlihat) → Diagnosis Jenis Produk → Peta Owned/Earned/Paid → Kanal Dipakai & Tidak Dipakai (+ alasan) → Batas CPA (kalau ada budget iklan) → Funnel → Pilar Konten → Kalender → Titik Evaluasi → Risiko & Pertanyaan Terbuka.
 
 Tutup dengan ringkasan ≤6 baris: path file, tujuan utama, kanal terpilih, jumlah post/minggu vs kapasitas, titik evaluasi pertama, dan risiko terbesar.
 

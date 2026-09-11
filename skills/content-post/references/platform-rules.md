@@ -31,6 +31,18 @@ Dua jenis angka di bawah, bedakan saat menulis ke user:
 - **Hashtag**: batas keras **30**, rekomendasi **~5** yang relevan. Hashtag ikut dihitung ke batas caption.
 - **Caption per slide**: carousel sekarang bisa punya caption berbeda di tiap slide — manfaatkan untuk carousel edukasi/langkah-langkah.
 
+**Safe zone & ekspor — dari praktik produksi nyata, bukan spesifikasi resmi Instagram** (rekomendasi):
+- **~150px bawah** tiap slide jangan diisi teks penting — tertutup antarmuka di tampilan grid profil.
+- **~150×150px pojok kanan atas** slide pertama carousel jangan diisi teks/lencana — di situ muncul ikon multi-slide pada thumbnail grid.
+- **Ekspor 2x** (mis. 2160×2700 untuk slide 1080×1350): Instagram mengompres ulang setiap upload, sumber 2x hasilnya jauh lebih tajam — terutama teks tipis. File tetap kecil untuk desain flat (~110-230 KB per slide PNG).
+- **Jangan taruh gradasi halus tepat di garis sambungan** carousel yang dirancang menyambung antar slide — tiap slide dikompres terpisah, jadi gradasi di sambungan memunculkan pita warna yang tidak nyambung.
+
+**Mosaic grid profil** (satu gambar besar dipecah jadi 3×2 atau 1×3 post di grid profil):
+- Kanvas master: **3240×2700** (3×2) atau **3240×1350** (1×3 / pinned banner), lalu dipotong per 1080×1350.
+- **Celah grid**: ada sekat 1-3px antar post di HP; huruf yang terpotong pas di garis 1080px (M, N, O) terlihat bolong. Solusinya **bleed slicing** — potong **1160px** (lebih 80px), lalu atur posisinya saat upload lewat *Edit Cover → Profile Grid* sampai sambungannya pas.
+- **Urutan upload mundur**: post terbaru selalu tampil di kiri atas, jadi upload dimulai dari **kanan bawah** berakhir di **kiri atas**.
+- Tiap potongan sebaiknya jadi carousel sendiri (cover mosaic + slide isi + slide ajakan), bukan gambar mati tanpa konteks.
+
 ## TikTok
 
 | Format | Ukuran | Rasio |
@@ -86,7 +98,8 @@ Dua jenis angka di bawah, bedakan saat menulis ke user:
 ## Aturan lintas platform
 
 - **Jangan cross-post mentah.** Konten yang sama wajib disesuaikan per platform: rasio, panjang caption, gaya bahasa, dan posisi hook berbeda-beda. Cross-post mentah yang paling sering salah: landscape di feed IG (kecil), caption IG 2.200 karakter dipaksa ke X (terpotong), link panjang di Threads (menghabiskan kuota).
-- **Teks di dalam gambar harus terbaca di HP.** Pada kanvas lebar 1080px, teks isi jangan di bawah ~32px, judul idealnya 60px+. Uji dengan membayangkan gambar di layar selebar ~6 cm.
+- **Teks di dalam gambar harus terbaca di HP.** Skala yang terbukti jalan di carousel 1080px (dari sistem produksi nyata): cover ~82px, judul slide ~58px, judul poin ~41px, isi **~30px**, keterangan ~26px, dan label ~21px **hanya** untuk teks pendek huruf kapital berjarak (tombol, "GESER", navigasi) — bukan untuk kalimat. Uji dengan membayangkan gambar di layar selebar ~6 cm.
+- **Maks ~45 kata per slide.** Kalau sebuah judul butuh dua kata sambung, itu tanda harus dipecah jadi dua slide.
 - **Hook di depan, selalu.** Setiap platform memotong teks di titik berbeda (IG ~125, TikTok ~80-100, judul Shorts ~40). Apapun platformnya, kalimat pertama wajib bisa berdiri sendiri.
 
 ## Sumber (verifikasi 2026-09-11)
@@ -97,3 +110,4 @@ Dua jenis angka di bawah, bedakan saat menulis ke user:
 - X: tweetarchivist.com, sendcove.app (karakter & gambar)
 - Threads: ferryman.io, kleoapp.io (500 karakter, text attachment 10.000, URL penuh)
 - WhatsApp: green-api.com (status 90 detik), moda.app (ukuran status)
+- Safe zone grid IG (150px), ekspor 2x, mosaic/bleed slicing, skala tipografi carousel: praktik produksi nyata dari sistem carousel user (bukan dokumentasi resmi Instagram — perlakukan sebagai rekomendasi yang sudah teruji, bukan batas keras)
