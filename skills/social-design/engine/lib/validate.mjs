@@ -81,6 +81,9 @@ export function validateDeck(deck, patterns, brand = {}, fileExists = () => true
     if (typeof slide.image === 'string' && !fileExists(slide.image)) {
       errors.push(`${where}: image "${slide.image}" not found in the brand folder`);
     }
+    if (slide.pattern === 'photo' && !slide.chromeOn) {
+      warnings.push(`${where}: pattern "photo" has no "chromeOn" ("light"/"dark") — wordmark/handle color follows the brand token for this ground, which may not read over the actual photo`);
+    }
   });
 
   if (format && outputCount > format.maxSlides) {

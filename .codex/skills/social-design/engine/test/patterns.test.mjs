@@ -43,6 +43,15 @@ test('a pattern file that registers without a render function fails loudly', () 
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
+test('photo pattern requires only an image (title/body optional for a pure photo slide)', () => {
+  const meta = loadPatternMeta(patternFiles(PATTERNS_DIR));
+  // meta.photo.required is an Array from the vm sandbox realm (loadPatternMeta uses
+  // vm.runInNewContext) — Array.from() normalizes it to this realm's Array before a
+  // strict deepEqual, which otherwise fails on constructor identity despite equal content.
+  assert.deepEqual(Array.from(meta.photo.required), ['image']);
+  assert.equal(meta.photo.span, 1);
+});
+
 test('the bridge crossing panel carries no text at the seam (per the design rule)', () => {
   const src = fs.readFileSync(path.join(PATTERNS_DIR, 'bridge.js'), 'utf8');
   const panelDiv = src.match(/<div style="position:absolute;left:\$\{panelLeft\}[\s\S]*?<\/div>/)[0];

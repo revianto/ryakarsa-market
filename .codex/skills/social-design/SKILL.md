@@ -88,7 +88,9 @@ Deck = `<studio>/brands/<brand>/decks/<nama>.json`:
 }
 ```
 
-Pola bawaan: `cover`, `title-body`, `numbered`, `stat`, `quote`, `image-text`, `closing` (satu-satunya ber-CTA), `bridge` (dua slide menyambung). Field umum: `bg: "alt"` untuk ground kontras, `link` untuk tautan bergaris di kanan bawah, `image` (path relatif ke folder brand, mis. `assets/foto.jpg`).
+Pola bawaan — teks murni: `cover`, `title-body`, `numbered`, `stat`, `quote`, `closing` (satu-satunya ber-CTA), `bridge` (dua slide menyambung). Kombinasi teks+gambar: `image-text` (foto & teks di area terpisah, bertumpuk vertikal — untuk foto yang perlu dilihat utuh) dan `photo` (foto full-bleed 1 kanvas penuh dengan teks **menimpa** di atasnya lewat scrim gradasi — untuk cover/kutipan gaya editorial). Field umum: `bg: "alt"` untuk ground kontras, `link` untuk tautan bergaris di kanan bawah, `image` (path relatif ke folder brand, mis. `assets/foto.jpg`).
+
+**Pola `photo` butuh `chromeOn: "light"|"dark"`** — keterbacaan wordmark/handle di atas foto bergantung pada foto itu sendiri, bukan token brand untuk ground ini, jadi validator memperingatkan kalau field ini kosong. Pilih berdasar area foto yang ditempati header (kiri-atas): foto gelap di situ → `"light"` (chrome jadi putih); foto terang → `"dark"`.
 
 Susun urutan slide dengan ketukan narasi di `content-post` (kail → bukti masalah → cerita → cara kerja → bukti pilar → jaminan → ajakan).
 

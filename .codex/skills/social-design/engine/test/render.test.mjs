@@ -114,6 +114,82 @@ test('an unloadable web font fails loudly with an actionable message', { skip },
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
+test('chromeOn actually recolors the wordmark and handle, not just an ancestor style', { skip }, async () => {
+  // Mirrors renderDeck's real loading sequence (goto the shell's file:// origin, then
+  // addStyleTag/addScriptTag by path) rather than setContent + <script src="file://">,
+  // which Chrome refuses to load from an about:blank document.
+  const { chromium } = await import('playwright-core');
+  const { pathToFileURL } = await import('node:url');
+  const browser = await chromium.launch({ channel: 'chrome' });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1080, height: 1350 } });
+    await page.goto(pathToFileURL(path.join(ENGINE_DIR, 'shell.html')).href);
+    await page.addStyleTag({ content: TOKENS_CSS });
+    await page.addStyleTag({ path: path.join(ENGINE_DIR, 'base.css') });
+    await page.addScriptTag({ path: path.join(ENGINE_DIR, 'core.js') });
+    await page.addScriptTag({ content: "UC.register({ name: 'blank', required: [], render: () => '' });" });
+    const ctx = { format: (await import('../lib/formats.mjs')).getFormat('ig-carousel'),
+      brand: { name: 't', wordmark: 'T', handle: '@t' }, chrome: { swipeLabel: 'Geser', showHandle: true },
+      type: { displayWeight: 700, bodyWeight: 400 }, assetBase: '', showSwipe: true };
+    const colorOf = (sel) => page.$eval(sel, (el) => getComputedStyle(el).color);
+
+    await page.evaluate(({ slide, ctx }) => UC.renderSlide(slide, ctx), { slide: { pattern: 'blank' }, ctx });
+    const withoutOverride = await colorOf('.ss-wordmark');
+
+    await page.evaluate(({ slide, ctx }) => UC.renderSlide(slide, ctx), { slide: { pattern: 'blank', chromeOn: 'light' }, ctx });
+    assert.equal(await colorOf('.ss-wordmark'), 'rgb(255, 255, 255)');
+    assert.equal(await colorOf('.ss-handle'), 'rgb(255, 255, 255)');
+    assert.notEqual(await colorOf('.ss-wordmark'), withoutOverride);
+  } finally {
+    await browser.close();
+  }
+});
+
+test('a full-bleed pattern (inset:0 absolute layers) never buries the wordmark', { skip }, async () => {
+  // Regression: .ss-head used to be a static (non-positioned) block, so ANY absolutely
+  // positioned pattern content painted above it regardless of DOM order or z-index —
+  // .ss-foot happened to survive only because it was already position:absolute itself.
+  // document.elementFromPoint proves what a viewer actually sees, not just that the
+  // wordmark node exists with the right CSS color (which it did even while hidden).
+  const { chromium } = await import('playwright-core');
+  const { pathToFileURL } = await import('node:url');
+  const browser = await chromium.launch({ channel: 'chrome' });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1080, height: 1350 } });
+    await page.goto(pathToFileURL(path.join(ENGINE_DIR, 'shell.html')).href);
+    await page.addStyleTag({ content: TOKENS_CSS });
+    await page.addStyleTag({ path: path.join(ENGINE_DIR, 'base.css') });
+    await page.addScriptTag({ path: path.join(ENGINE_DIR, 'core.js') });
+    await page.addScriptTag({
+      content: `UC.register({ name: 'fullbleed', required: [], render: () =>
+        '<div style="position:absolute;inset:0;z-index:0;background:#000"></div>' +
+        '<div style="position:absolute;inset:0;z-index:2"></div>' });`,
+    });
+    const ctx = { format: (await import('../lib/formats.mjs')).getFormat('ig-carousel'),
+      brand: { name: 't', wordmark: 'T', handle: '@t' }, chrome: { swipeLabel: 'Geser', showHandle: true },
+      type: { displayWeight: 700, bodyWeight: 400 }, assetBase: '', showSwipe: true };
+    await page.evaluate(({ slide, ctx }) => UC.renderSlide(slide, ctx), { slide: { pattern: 'fullbleed', chromeOn: 'light' }, ctx });
+
+    const wordmarkIsHit = await page.evaluate(() => {
+      const el = document.querySelector('.ss-wordmark');
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return el.contains(hit) || hit === el;
+    });
+    assert.ok(wordmarkIsHit, 'a full-bleed pattern layer is on top at the wordmark\'s own coordinates — it is visually buried');
+
+    const footerIsHit = await page.evaluate(() => {
+      const el = document.querySelector('.ss-swipe');
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return el.contains(hit) || hit === el;
+    });
+    assert.ok(footerIsHit, 'footer (swipe indicator) must also stay on top');
+  } finally {
+    await browser.close();
+  }
+});
+
 test('a missing tokens.css fails before launching the browser', async () => {
   const { renderDeck } = await import('../lib/render.mjs');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ss-render-'));

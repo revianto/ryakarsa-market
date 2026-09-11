@@ -93,6 +93,20 @@ test('more than one CTA slide is a warning (one call to action per carousel)', (
   assert.match(warnings.join(' '), /2 slides carry a CTA/);
 });
 
+test('a photo slide without chromeOn gets a warning (chrome legibility depends on the actual photo)', () => {
+  const patterns = { photo: { required: ['image'] } };
+  const deck = baseDeck([{ pattern: 'photo', image: 'x.jpg' }]);
+  const { warnings } = validateDeck(deck, patterns, {}, () => true);
+  assert.match(warnings.join(' '), /chromeOn/);
+});
+
+test('a photo slide with chromeOn set has no such warning', () => {
+  const patterns = { photo: { required: ['image'] } };
+  const deck = baseDeck([{ pattern: 'photo', image: 'x.jpg', chromeOn: 'light' }]);
+  const { warnings } = validateDeck(deck, patterns, {}, () => true);
+  assert.ok(!warnings.some((w) => /chromeOn/.test(w)));
+});
+
 test('a deck with no slides array fails clearly instead of crashing', () => {
   const { errors } = validateDeck({ format: 'ig-carousel' }, PATTERNS);
   assert.match(errors[0], /no "slides" array/);

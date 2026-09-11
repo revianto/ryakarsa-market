@@ -32,16 +32,29 @@
     ].join(';');
   }
 
-  function chromeHead(ctx) {
+  // A slide over a photo (pattern "photo") can override chrome color, since
+  // legibility there depends on the image, not the brand token for this ground.
+  // A CSS custom property, not `color` directly: every chrome element (.ss-wordmark,
+  // .ss-handle, .ss-swipe, .ss-link) already sets its own `color` from the brand tokens,
+  // so a `color` on this wrapping <header>/<footer> would never inherit down to them —
+  // inheritance only fills in a property a descendant leaves unset. var(--chrome-color, X)
+  // in each of those rules lets this override win when present, X apply otherwise.
+  function chromeStyle(slide) {
+    if (slide.chromeOn === 'light') return 'style="--chrome-color:#FFFFFF"';
+    if (slide.chromeOn === 'dark') return 'style="--chrome-color:#1A1A1A"';
+    return '';
+  }
+
+  function chromeHead(ctx, slide = {}) {
     const handle = ctx.chrome.showHandle && ctx.brand.handle
       ? `<span class="ss-handle">${esc(ctx.brand.handle)}</span>` : '<span></span>';
-    return `<header class="ss-head"><span class="ss-wordmark">${esc(ctx.brand.wordmark || ctx.brand.name)}</span>${handle}</header>`;
+    return `<header class="ss-head" ${chromeStyle(slide)}><span class="ss-wordmark">${esc(ctx.brand.wordmark || ctx.brand.name)}</span>${handle}</header>`;
   }
 
   function chromeFoot(ctx, slide) {
     const swipe = ctx.showSwipe ? `<span class="ss-swipe ss-label">${esc(ctx.chrome.swipeLabel)}</span>` : '<span></span>';
     const link = slide.link ? `<span class="ss-link">${esc(slide.link)}</span>` : '<span></span>';
-    return `<footer class="ss-foot">${swipe}${link}</footer>`;
+    return `<footer class="ss-foot" ${chromeStyle(slide)}>${swipe}${link}</footer>`;
   }
 
   // Renders one deck slide (which may span several output images) into #stage.
@@ -55,7 +68,7 @@
     if (span === 1) {
       stage.innerHTML =
         `<section class="ss-canvas${alt}" style="${canvasVars(ctx, 1)}">` +
-        chromeHead(ctx) + `<div class="ss-body">${p.render(slide, ctx)}</div>` + chromeFoot(ctx, slide) +
+        chromeHead(ctx, slide) + `<div class="ss-body">${p.render(slide, ctx)}</div>` + chromeFoot(ctx, slide) +
         `</section>`;
       return;
     }
@@ -65,7 +78,7 @@
     const chromeSegments = Array.from({ length: span }, (_, i) =>
       `<div style="position:absolute;top:0;left:${i * f.width}px;width:${f.width}px;height:${f.height}px;` +
       `padding:${Math.max(f.margin, f.safeTop)}px ${f.margin}px;pointer-events:none">` +
-      chromeHead(ctx) + chromeFoot({ ...ctx, showSwipe: ctx.showSwipe || i < span - 1 }, slide) + `</div>`
+      chromeHead(ctx, slide) + chromeFoot({ ...ctx, showSwipe: ctx.showSwipe || i < span - 1 }, slide) + `</div>`
     ).join('');
     stage.innerHTML =
       `<section class="ss-canvas${alt}" style="${canvasVars(ctx, span)};padding:0">` +

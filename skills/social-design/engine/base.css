@@ -45,6 +45,15 @@ html, body { background: transparent; }
 
 /* ---------- chrome: identical coordinates on every slide ---------- */
 .ss-head {
+  /* position:relative (no offset -> layout unaffected) puts this in the "positioned"
+     paint bucket together with .ss-foot and any pattern's own absolutely-positioned
+     content (e.g. a full-bleed photo). Without it, .ss-head is a static block and
+     ALWAYS paints below any positioned element regardless of DOM order — a full-bleed
+     pattern silently buried the wordmark while .ss-foot (already position:absolute)
+     survived only because it happens to come later in the DOM. z-index guarantees
+     chrome wins even against a pattern that sets its own higher z-index. */
+  position: relative;
+  z-index: 5;
   flex: none;
   display: flex;
   justify-content: space-between;
@@ -55,17 +64,18 @@ html, body { background: transparent; }
   font-family: var(--ss-font-display);
   font-weight: var(--display-weight, 700);
   font-size: calc(27 * var(--u));
-  color: var(--c-heading);
+  color: var(--chrome-color, var(--c-heading));
 }
 .ss-handle, .ss-label {
   font-weight: 600;
   font-size: calc(21 * var(--u));
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--c-muted);
+  color: var(--chrome-color, var(--c-muted));
 }
 .ss-foot {
   position: absolute;
+  z-index: 5; /* see .ss-head comment — explicit, not incidental, priority over pattern content */
   left: var(--m);
   right: var(--m);
   bottom: var(--foot-bottom);
@@ -74,15 +84,15 @@ html, body { background: transparent; }
   justify-content: space-between;
   align-items: center;
 }
-.ss-swipe { display: flex; align-items: center; gap: calc(30 * var(--u)); color: var(--c-heading); }
-.ss-swipe::before { content: ""; width: calc(76 * var(--u)); height: calc(3 * var(--u)); background: var(--c-accent); }
+.ss-swipe { display: flex; align-items: center; gap: calc(30 * var(--u)); color: var(--chrome-color, var(--c-heading)); }
+.ss-swipe::before { content: ""; width: calc(76 * var(--u)); height: calc(3 * var(--u)); background: var(--chrome-color, var(--c-accent)); }
 .ss-link {
   font-weight: 600;
   font-size: calc(21 * var(--u));
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--c-accent-text);
-  border-bottom: calc(2 * var(--u)) solid var(--c-accent);
+  color: var(--chrome-color, var(--c-accent-text));
+  border-bottom: calc(2 * var(--u)) solid var(--chrome-color, var(--c-accent));
   padding-bottom: calc(6 * var(--u));
 }
 
