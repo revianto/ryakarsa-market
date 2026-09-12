@@ -82,6 +82,7 @@ Tulis ke `./BRAND-KIT.md` (atau path yang user sebut). Kalau file sudah ada, bac
 ## 5. Glosarium
 <!-- Kata/istilah yang dipakai vs dihindari. Mis. "tamu" bukan "guest", "undangan" bukan "invitation", "paket" bukan "plan". Juga sapaan: kamu/Anda/kak? -->
 <!-- Termasuk aturan tanda baca/tipografi naskah kalau brand punya (mis. tidak memakai tanda pisah panjang atau titik tengah). -->
+<!-- Mode extract, sesi berikutnya (glosarium sudah ada): jangan tulis ulang dari nol — baca versi lama dulu, lalu MERGE istilah baru yang ditemukan (dari sumber baru, atau dari konflik yang dilaporkan balik oleh content-post/landing-copy/campaign-plan saat mereka pakai brand kit ini) ke daftar yang sudah ada. Istilah lama yang ternyata tidak konsisten dipakai lagi ditandai "(perlu ditinjau)", jangan langsung dihapus diam-diam. -->
 
 ### Cara menyampaikan promo
 <!-- Bagaimana brand ini bicara saat ada diskon/promo tanpa merusak persepsinya. Promo berlebihan bisa "mendiskon" brand, bukan cuma harga — paling berisiko untuk brand premium/eksklusif. -->
@@ -113,6 +114,7 @@ Tutup dengan ringkasan ≤6 baris: path file, mode (extract/generate), sumber ya
 
 ## Handoff
 
+- **Istilah baru ditemukan saat bikin konten** (`content-post`/`landing-copy`/`campaign-plan` ketemu kata yang belum ada di glosarium, atau kata di glosarium terasa tidak pas lagi): jangan diam-diam diputuskan di skill konten itu — laporkan balik ke sini supaya `BRAND-KIT.md` bagian 5 diperbarui (merge, bukan generate ulang), sehingga konten berikutnya konsisten memakainya juga.
 - **Konten per platform** dari brand kit ini: `content-post`.
 - **Rencana kampanye** (kanal, funnel, kalender): `campaign-plan`.
 - **Copy landing page**: `landing-copy`.
