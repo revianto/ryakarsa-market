@@ -135,6 +135,17 @@ Setelah beres, **commit deck-nya di repo studio** — deck adalah riwayat konten
 - Crop grid Instagram 3:4 — kail slide pertama di area tengah.
 - Kejujuran isi: angka dan kutipan harus ada sumbernya.
 
+### Checklist review sebelum diserahkan (dari "Catatan Belajar DKV: Desain Poster", 2026-10-11)
+
+Penilaian manual, dijalankan di PNG hasil render. Bagian cetak (CMYK, bleed, dpi, QR, jarak baca fisik) sengaja tidak dibawa.
+
+1. **Konteks dulu**: feed/story = paparan sebentar (1–3 detik) → satu pesan, judul besar. Isi carousel = paparan lama → boleh lebih detail. Detail ditaruh di dalam, bukan di sampul.
+2. **Tiga peran, satu per slide**: *primary hook* (terbesar, paling tebal, paling kontras, hanya satu) → *secondary hook* (menjawab apa/untuk siapa/kapan; lebih kecil tapi jelas) → *CTA* (spesifik, diberi ruang kosong, maks satu). Dua primary hook berebut = perbaiki.
+3. **Rasio judul : teks isi ≈ 3:1 atau lebih.** Secondary hook yang mendekati ukuran primary mengambil alih.
+4. **Squint test**: pipihkan mata atau blur PNG; yang muncul pertama harus primary hook. Lalu **tes grayscale** (saturasi 0): teks dan latar masih terpisah jelas? Ini melengkapi kontras WCAG validator, yang hanya mengecek pasangan token.
+5. **CTA ≠ footer**: CTA mengajak bertindak; wordmark, segel, handle hanya melengkapi (footer). Jangan tertukar, jangan menumpuk CTA (WA + IG + web + email sekaligus).
+6. **Alignment konsisten** (kiri atau tengah, jangan dicampur tanpa alasan) dan teks tidak mepet tepi.
+
 Dimensi & aturan platform sumbernya satu: `../content-post/references/platform-rules.md` (bertanggal — cek ulang kalau sudah lama). Kalau platform mengubah ukuran, perbarui file itu **dan** `engine/lib/formats.mjs`.
 
 ## Menambah pola
