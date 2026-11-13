@@ -20,3 +20,8 @@ test('YouTube thumbnail defaults to 1x (2 MB cap)', () => {
 test('Instagram carousel defaults to 2x (recompression survives sharper)', () => {
   assert.equal(FORMATS['ig-carousel'].scale, 2);
 });
+
+test('digital A4 poster has its own dimensions, margins, safe zones and export scale', () => {
+  assert.deepEqual(getFormat('poster-a4'), { name: 'poster-a4', width: 1240, height: 1754,
+    margin: 96, safeTop: 0, safeBottom: 0, safeRight: 0, maxSlides: 1, scale: 2 });
+});

@@ -93,6 +93,12 @@ export function validateDeck(deck, patterns, brand = {}, fileExists = () => true
   if (spanCount > 2) errors.push(`${spanCount} connected pairs — max 2 per carousel`);
   if (ctaCount > 1) warnings.push(`${ctaCount} slides carry a CTA — one call to action per carousel converts better than several`);
   if (format && format.maxSlides > 1 && deck.slides.length > 1) {
+    deck.slides.forEach((slide, i) => {
+      const isCta = patterns[slide.pattern]?.cta || slide.cta;
+      if (isCta && i < deck.slides.length - 1) {
+        warnings.push(`slide ${i + 1}: carries a CTA but is not the last slide — keep the flow hook → content → one CTA at the end`);
+      }
+    });
     const last = deck.slides[deck.slides.length - 1];
     if (!(patterns[last.pattern]?.cta || last.cta)) warnings.push('Last slide has no CTA — carousels should end with one clear action');
   }

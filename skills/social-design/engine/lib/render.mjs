@@ -82,6 +82,7 @@ export async function renderDeck({ brandPath, brand, deck, patternFiles, pattern
     for (const f of fs.readdirSync(outDir)) if (/^slide-\d+\.png$/.test(f)) fs.unlinkSync(path.join(outDir, f));
     const faces = requiredFaces(brand.fonts);
     const baseCtx = {
+      theme: deck.theme,
       format,
       brand: { name: brand.name, wordmark: brand.wordmark, handle: brand.handle },
       chrome: { swipeLabel: 'Geser', showHandle: true, ...(brand.chrome || {}) },
@@ -160,6 +161,7 @@ export async function renderMosaicDeck({ brandPath, brand, deck, patternFiles, p
     for (const f of fs.readdirSync(outDir)) if (/^cell-.*\.png$/.test(f)) fs.unlinkSync(path.join(outDir, f));
     const faces = requiredFaces(brand.fonts);
     const ctx = {
+      theme: deck.theme,
       brand: { name: brand.name, wordmark: brand.wordmark, handle: brand.handle },
       type: { displayWeight: 700, bodyWeight: 400, ...(brand.type || {}) },
       assetBase: pathToFileURL(brandPath).href + '/',

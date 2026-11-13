@@ -54,12 +54,66 @@ Kalau user mengirim referensi (screenshot carousel kompetitor, mockup, link post
    - **Tidak cocok** — jelaskan kenapa (mis. referensi itu untuk format Reels 9:16, sedangkan yang diminta carousel 4:5), tawarkan pola terdekat yang ada.
 4. Render satu slide contoh dengan pola baru itu dan tunjukkan ke user sebelum dipakai untuk deck penuh — pola hasil interpretasi referensi lebih sering butuh satu ronde penyesuaian dibanding pola bawaan.
 
-## Step 2 — Tentukan mode
+## Step 2 — Kuesioner brief (jangan menebak)
 
-Tanyakan lewat **AskUserQuestion** kalau belum jelas (fallback daftar bernomor):
+Tujuan: setiap keputusan desain punya **sumber** — jawaban user, data nyata (`brand.json`, deck lama, feed yang ada), atau asumsi yang **ditandai eksplisit**. Tidak ada keputusan yang muncul dari "kira-kira begini bagusnya".
 
-- **Ide saja** — konsep: format, susunan per slide (pola + teks), aset yang dibutuhkan. Bisa langsung ditulis sebagai deck JSON supaya tinggal dirender nanti.
-- **Generate langsung** — PNG siap upload lewat engine. Foto produk/orang asli tetap harus disediakan user (taruh di `assets/`).
+**Aturan main:**
+1. **Baca dulu, tanya kemudian.** Jangan tanyakan apa yang sudah bisa dibaca: `brand.json` (wordmark, handle, aturan), `social decks <brand>` (gaya & topik yang sudah pernah), pesan user itu sendiri. Pertanyaan yang jawabannya sudah ada = membuang waktu user.
+2. **Pakai AskUserQuestion**, maks 4 pertanyaan per ronde, opsi konkret (bukan "bagus/biasa"). Fallback daftar bernomor kalau tool tidak tersedia. Setiap pertanyaan punya opsi **"Belum tahu"** secara implisit (user bisa pilih Other).
+3. **Jawaban "belum tahu" tidak boleh ditambal dengan karangan.** Hasilnya salah satu dari: (a) placeholder (`[FOTO — ...]`, `[ANGKA — butuh sumber]`), (b) pilih opsi paling aman dan catat sebagai asumsi di brief, (c) tanya balik satu kali dengan contoh. Tidak ada opsi (d) mengarang.
+4. **Skala sesuai tugas.** Satu post cepat dari brand yang sudah mapan = Ronde 1 saja. Carousel baru / brand baru / kampanye = semua ronde. Jangan menjalankan ronde yang tidak relevan hanya karena ada.
+
+### Ronde 1 — Dasar (selalu)
+
+| Pertanyaan | Opsi | Menentukan |
+|---|---|---|
+| Mode? | **Ide saja** (konsep + deck JSON, belum render) · **Generate langsung** (PNG siap upload; foto asli tetap dari user di `assets/`) | Seberapa jauh dikerjakan |
+| Platform & format? | IG carousel · IG feed tunggal · Story/Reels cover · YouTube/Shorts thumbnail · TikTok cover · X/Threads · WA status · Mosaic profil | `format` deck, ukuran, safe zone |
+| Satu tujuan post ini? | Dikenal (awareness) · Edukasi · Bukti/kepercayaan · Ajak bertindak (jualan) · Hiburan/relatable | Pola & ketukan narasi; **pilih satu**, kalau user pilih dua minta urutkan |
+| Siapa yang melihat? | Orang yang belum kenal brand · Pengikut yang sudah ada · Calon pembeli yang sedang membandingkan | Kepadatan teks (1–3 detik vs dibaca lama), nada kail |
+
+### Ronde 2 — Isi & bahan (selalu kecuali teks + aset sudah lengkap dari user)
+
+| Pertanyaan | Opsi | Menentukan |
+|---|---|---|
+| Teks sudah ada? | Sudah final (dari `content-post`/user) · Baru poin kasar · Belum ada sama sekali | Kalau belum/kasar: sarankan `content-post` dulu (lihat Step 1 butir 4); jangan menulis copy panjang sendiri lalu menyebutnya final |
+| Visual utama post ini? | Teks tipografis murni · Foto asli (user punya) · Ilustrasi/tekstur digenerate · Screenshot aplikasi | Pola (`image-text`/`photo`/teks murni), kebutuhan aset |
+| Kalau foto: sudah ada filenya? | Ada, di mana · Belum ada (pakai placeholder) | Placeholder vs render final. **Tidak ada foto = tetap placeholder**, bukan stok yang "mirip" |
+| Ada angka/kutipan/klaim yang dipakai? | Tidak ada · Ada **dan** sumbernya jelas (tanya sumbernya) · Ada tapi belum jelas sumbernya | Pola `stat`/`quote` hanya boleh bila sumber jelas; sumber tidak jelas = jangan pakai atau tandai `[PERLU SUMBER]` |
+
+### Ronde 3 — Gaya & batas (brand baru, feed belum mapan, atau user menyebut "beda dari biasanya")
+
+| Pertanyaan | Opsi | Menentukan |
+|---|---|---|
+| Ikuti gaya feed yang sekarang? | Ya, persis (minta 3–5 screenshot terbaru) · Ya tapi lebih segar · Mulai arah baru | Mengikuti `brand.css`/pola yang ada vs. eksplorasi; arah baru → tawarkan 2–3 konsep berbeda dulu, bukan satu |
+| Ada referensi visual? | Ada (kirim) · Tidak ada | Jalankan Step 1b; tanpa referensi = pakai pola bawaan, jangan mengarang "gaya referensi" |
+| Seberapa ramai tampilannya? | Bersih/minim · Sedang · Ramai/ornamental | Tingkat ornamen & aset digenerate. Teks informasi tetap harus terbaca di semua tingkat |
+| Ada yang dilarang? | Warna/kata/gaya tertentu · Tidak ada | `rules.bannedChars`, pantangan brand; catat ke `brand.json` kalau berlaku permanen |
+
+### Ronde 4 — Aksi (hanya kalau tujuan = "ajak bertindak" atau ada slide penutup)
+
+| Pertanyaan | Opsi | Menentukan |
+|---|---|---|
+| CTA tunggal? | Satu aksi spesifik (tanya kalimatnya) · Tidak ada CTA | Pola `closing`; **maks satu CTA**, jangan menumpuk WA + IG + web |
+| Tujuan klik/tautan? | URL (tanya persisnya) · WA · Bio/DM · Tidak ada | Field `link`; **jangan menebak URL atau nomor** |
+
+### Setelah kuesioner: ringkasan brief
+
+Sebelum menulis deck, tampilkan **ringkasan 6–8 baris** ke user dan minta konfirmasi singkat:
+
+```
+Brief — <brand> / <nama-deck>
+Mode: generate · Format: ig-carousel (6 slide) · Tujuan: edukasi
+Teks: dari content-post (final) · Visual: tipografis + 1 ilustrasi digenerate
+Fakta: 1 angka (sumber: <apa>) · CTA: "<kalimat>" → <tujuan>
+ASUMSI (belum dikonfirmasi): <daftar, atau "tidak ada">
+PLACEHOLDER: <daftar, atau "tidak ada">
+```
+
+Baris **ASUMSI** dan **PLACEHOLDER** wajib ada walau isinya "tidak ada" — itu yang membuat tebakan kelihatan. Simpan ringkasan sebagai `<brand>/decks/<nama>.brief.md` di samping deck (engine hanya membaca `*.json`, jadi file ini aman), supaya sesi berikutnya tahu **kenapa** deck dibuat begitu, bukan hanya apa isinya.
+
+**Sebelum merender**, cocokkan ulang: tiap angka/kutipan di deck ada di brief dengan sumbernya; tiap placeholder masih placeholder; tidak ada aset "baru" yang tidak ada di brief. Selisih = berhenti dan tanya, jangan dirapikan diam-diam.
 
 ## Step 3 — Brand baru (sekali per brand)
 
@@ -144,7 +198,8 @@ Penilaian manual, dijalankan di PNG hasil render. Bagian cetak (CMYK, bleed, dpi
 3. **Rasio judul : teks isi ≈ 3:1 atau lebih.** Secondary hook yang mendekati ukuran primary mengambil alih.
 4. **Squint test**: pipihkan mata atau blur PNG; yang muncul pertama harus primary hook. Lalu **tes grayscale** (saturasi 0): teks dan latar masih terpisah jelas? Ini melengkapi kontras WCAG validator, yang hanya mengecek pasangan token.
 5. **CTA ≠ footer**: CTA mengajak bertindak; wordmark, segel, handle hanya melengkapi (footer). Jangan tertukar, jangan menumpuk CTA (WA + IG + web + email sekaligus).
-6. **Alignment konsisten** (kiri atau tengah, jangan dicampur tanpa alasan) dan teks tidak mepet tepi.
+6. **Alignment menurut panjang teks** (referensi @aldypratama.co 2026-11-05): teks isi 3 baris atau lebih (body, list, paragraf) **wajib rata kiri**, mengikuti pola baca F: baris atas lebar, baris kedua lebih pendek, lalu turun di sisi kiri. Judul 1-2 baris boleh rata tengah; pola sampul dan penutup boleh rata tengah. **Pengecualian disengaja** (pilihan desain, di luar aturan panjang teks): pola `closing` engine memakai F-pattern rata kiri (judul lebar kiri atas, baris kedua lebih pendek, CTA/segel di dasar kiri). Jangan campur kiri dan tengah dalam satu blok teks tanpa alasan. Teks tidak mepet tepi dan tidak dimiringkan.
+7. **Alur carousel linear**: slide 1 = hook, slide tengah berurutan (isi 1, 2, 3), slide terakhir = satu CTA. Validator memperingatkan jika slide ber-CTA bukan slide terakhir.
 
 Dimensi & aturan platform sumbernya satu: `../content-post/references/platform-rules.md` (bertanggal — cek ulang kalau sudah lama). Kalau platform mengubah ukuran, perbarui file itu **dan** `engine/lib/formats.mjs`.
 

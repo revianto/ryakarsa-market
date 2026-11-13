@@ -208,3 +208,20 @@ test('a missing tokens.css fails before launching the browser', async () => {
   );
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+test('poster renders at its native dimensions and passes deck theme to a pattern', { skip }, async () => {
+  const dir = tempBrand();
+  try {
+    fs.mkdirSync(path.join(dir, 'patterns'));
+    fs.writeFileSync(path.join(dir, 'patterns', 'theme-check.js'), `UC.register({ name: 'theme-check', render(s, ctx) {
+      if (ctx.theme !== 'mawar-marun') throw new Error('Deck theme missing from context');
+      return UC.esc(s.theme || ctx.theme);
+    }});`);
+    const files = allPatternFiles(ENGINE_DIR, dir);
+    const { renderDeck } = await import('../lib/render.mjs');
+    const res = await renderDeck({ brandPath: dir, outDir: path.join(dir, 'out'),
+      brand: { name: 't', fonts: [] }, deck: { format: 'poster-a4', theme: 'mawar-marun', slides: [{ pattern: 'theme-check' }] },
+      patternFiles: files, patternMeta: loadPatternMeta(files), scale: 1 });
+    assert.deepEqual(png(res.files[0]), { w: 1240, h: 1754 });
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});

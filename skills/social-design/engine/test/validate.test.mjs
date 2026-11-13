@@ -150,3 +150,39 @@ test('a mosaic deck has no "no CTA" or "connected pairs" warnings — those are 
   const { warnings } = validateMosaicDeck(deck, PATTERNS);
   assert.equal(warnings.length, 0);
 });
+
+test('CTA on a non-final slide of a carousel warns with its slide number', () => {
+  const { errors, warnings } = validateDeck(baseDeck([
+    { pattern: 'cover', title: 'Hook' },
+    { pattern: 'closing', title: 'Ajak', cta: 'Daftar' },
+    { pattern: 'title-body', title: 'Isi' },
+  ]), PATTERNS);
+  assert.deepEqual(errors, []);
+  assert.ok(warnings.some((w) => /slide 2: carries a CTA but is not the last slide/.test(w)));
+});
+
+test('CTA only on the last slide gives no ordering warning', () => {
+  const { warnings } = validateDeck(baseDeck([
+    { pattern: 'cover', title: 'Hook' },
+    { pattern: 'title-body', title: 'Isi' },
+    { pattern: 'closing', title: 'Ajak', cta: 'Daftar' },
+  ]), PATTERNS);
+  assert.ok(!warnings.some((w) => /not the last slide/.test(w)));
+});
+
+test('slide-level cta field on a middle slide also warns; single-slide format does not', () => {
+  const mid = validateDeck(baseDeck([
+    { pattern: 'cover', title: 'Hook', cta: 'Klik' },
+    { pattern: 'title-body', title: 'Isi' },
+  ]), PATTERNS);
+  assert.ok(mid.warnings.some((w) => /slide 1: carries a CTA but is not the last slide/.test(w)));
+  const feed = validateDeck(baseDeck([{ pattern: 'closing', title: 'x', cta: 'y' }], 'ig-feed'), PATTERNS);
+  assert.ok(!feed.warnings.some((w) => /not the last slide/.test(w)));
+});
+
+test('digital A4 poster accepts one slide and rejects multi-page decks', () => {
+  const patterns = { cover: { required: ['title'] } };
+  const one = { format: 'poster-a4', slides: [{ pattern: 'cover', title: 'Poster' }] };
+  assert.deepEqual(validateDeck(one, patterns).errors, []);
+  assert.match(validateDeck({ ...one, slides: [...one.slides, ...one.slides] }, patterns).errors.join(' '), /allows at most 1/);
+});

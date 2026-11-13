@@ -6,6 +6,7 @@
 // maxSlides: platform hard limit for multi-slide formats (1 = single image).
 
 export const FORMATS = {
+  'poster-a4':      { width: 1240, height: 1754, margin: 96,  safeTop: 0,   safeBottom: 0,   safeRight: 0,   maxSlides: 1,  scale: 2 },
   'ig-carousel':    { width: 1080, height: 1350, margin: 80,  safeTop: 0,   safeBottom: 150, safeRight: 0,   maxSlides: 20, scale: 2 },
   'ig-feed':        { width: 1080, height: 1350, margin: 80,  safeTop: 0,   safeBottom: 150, safeRight: 0,   maxSlides: 1,  scale: 2 },
   'ig-square':      { width: 1080, height: 1080, margin: 80,  safeTop: 0,   safeBottom: 0,   safeRight: 0,   maxSlides: 20, scale: 2 },

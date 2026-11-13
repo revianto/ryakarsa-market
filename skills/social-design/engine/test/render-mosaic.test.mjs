@@ -37,14 +37,14 @@ function png(file) {
   return { w: h.readUInt32BE(16), h: h.readUInt32BE(20) };
 }
 
-async function renderMosaic(dir, cells, format = 'ig-mosaic-pinned-1x3') {
+async function renderMosaic(dir, cells, format = 'ig-mosaic-pinned-1x3', theme) {
   const { renderMosaicDeck } = await import('../lib/render.mjs');
   const files = allPatternFiles(ENGINE_DIR, dir);
   return renderMosaicDeck({
     brandPath: dir,
     outDir: path.join(dir, 'out'),
     brand: { name: 't', wordmark: 'T', fonts: [] },
-    deck: { format, cells },
+    deck: { format, cells, theme },
     patternFiles: files,
     patternMeta: loadPatternMeta(files),
     scale: 1,
@@ -118,4 +118,22 @@ test('a mosaic cell using a span>1 pattern is refused before launching the brows
     /Mosaic cells must be span-1.*bridge.*spans 2/,
   );
   fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('mosaic patterns receive the deck theme while preserving a cell override', { skip }, async () => {
+  const dir = tempBrand();
+  try {
+    fs.mkdirSync(path.join(dir, 'patterns'));
+    fs.writeFileSync(path.join(dir, 'patterns', 'theme-check.js'), `UC.register({ name: 'theme-check', render(s, ctx) {
+      if (ctx.theme !== 'mawar-marun') throw new Error('Deck theme missing');
+      if (s.theme !== s.expected) throw new Error('Cell theme was overwritten');
+      return UC.esc(s.theme || ctx.theme);
+    }});`);
+    const res = await renderMosaic(dir, [
+      { pattern: 'theme-check' },
+      { pattern: 'theme-check', theme: 'slide-theme', expected: 'slide-theme' },
+      { pattern: 'theme-check' },
+    ], 'ig-mosaic-pinned-1x3', 'mawar-marun');
+    assert.equal(res.files.length, 6);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
